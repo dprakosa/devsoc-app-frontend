@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.jsdelivr.net/npm/jquery"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery.terminal/js/jquery.terminal.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery.terminal/css/jquery.terminal.min.css" />
+</head>
+
+<body>
+    <template id="greetings">
+    Hi there, type anything to start chatting!
+    Here are some sample questions to get started:
+    * Tell me about yourself
+    * What do you think of UNSW?
+    * What comp courses have you done?
+    </template>
+    <script>
+        const term = $("body").terminal(
+            function (input) {
+                const term = this;
+                $.ajax({
+                    type: "POST",
+                    url: "https://devsoc-app-backend.onrender.com/message",
+                    data: JSON.stringify({message: input}),
+                    contentType: "application/json",
+                    dataType: "json",
+                    success: function (response) {
+                        term.typing("echo", 25, response, function () { });
+                    },
+                });
+            },
+            {
+                greetings: greetings.innerHTML,
+                prompt: "danar@web:~$ ",
+                checkArity: false,
+                processArguments: false,
+            },
+        );
+    </script>
+</body>
+
+</html>
